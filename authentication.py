@@ -15,5 +15,11 @@ async def firstRouter():
 @authentication_router.post("/create_user")
 async def create_user(user: UserSchema):
     return {
-        'response': f'user { {user.name} } create with success! ' 
+        'response': 'user  create with success! ',
+        'user': {
+            'name': user.name,
+            'email': user.email,
+            'adm': user.adm
+
+        }
     }
