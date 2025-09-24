@@ -1,12 +1,35 @@
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
 from sqlalchemy.orm import declarative_base
+from sqlalchemy_utils import EmailType
 
 
 
-db = create_engine("sqlite:///database/")
+db = create_engine("sqlite:///database/bank")
+
+EstrutureBase = declarative_base()
 
 
+class User(EstrutureBase):
+    __tablename__ = "users"
 
+    idTable = Column('id', Integer, autoincrement=True, primary_key=True )
+    nameTable = Column('name', String)
+    emailTable = Column('email', String, unique=True)
+    passwordTable = Column('password', String)
+    administratorTable = Column('administrator', Boolean)
+
+
+    def __init__ (self, nameP, emailP, passwordT, administratorP = False):
+        self.nameTable = nameP
+        self.emailTable = emailP
+        self.passwordTable = passwordT
+        self.administratorTable = administratorP 
+
+
+#pra CRIAR o arquivo de migração do alembic(que é quando vc altera alguma coisa na definição das classes que geram as tabelas), vc roda:
+#alembic revision --autogenerate -m "mensagem qualquer"
+
+#agora pra executar o arquivo de migração é usando alembic upgrade head
 
 
 
