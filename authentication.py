@@ -29,7 +29,8 @@ async def create_user(userR: UserSchema, session: Session = Depends(operating_se
         session.commit()
 
     return {
-        'response': 'user  create with success! ',
+        'response': 'user create with success! ',
+        
         'user': {
             'name': userR.name,
             'email': userR.email,

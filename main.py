@@ -6,5 +6,7 @@ app = FastAPI()
 
 
 from authentication import authentication_router
+from tasks import tasks_router
 
 app.include_router(authentication_router)
+app.include_router(tasks_router)

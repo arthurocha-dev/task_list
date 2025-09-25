@@ -4,7 +4,7 @@ from sqlalchemy_utils import EmailType
 
 
 
-db = create_engine("sqlite:///database/bank")
+db = create_engine("sqlite:///database/bank.db")
 
 EstrutureBase = declarative_base()
 
@@ -12,11 +12,11 @@ EstrutureBase = declarative_base()
 class User(EstrutureBase):
     __tablename__ = "users"
 
-    idTable = Column('id', Integer, autoincrement=True, primary_key=True )
-    nameTable = Column('name', String)
-    emailTable = Column('email', String, unique=True)
-    passwordTable = Column('password', String)
-    administratorTable = Column('administrator', Boolean)
+    idTable = Column("id", Integer, autoincrement=True, primary_key=True )
+    nameTable = Column("name", String)
+    emailTable = Column("email", String, unique= True )
+    passwordTable = Column("password", String)
+    administratorTable = Column("administrator", Boolean)
 
 
     def __init__ (self, nameP, emailP, passwordT, administratorP = False):
@@ -24,6 +24,20 @@ class User(EstrutureBase):
         self.emailTable = emailP
         self.passwordTable = passwordT
         self.administratorTable = administratorP 
+
+
+
+
+class Tasks(EstrutureBase):
+    __tablename__ = "tasks"
+
+    # user_idT = Column("user_id", ForeignKey("user.id"))
+    task_idT = Column("task_id", Integer, autoincrement=True, primary_key=True)
+    tasks = Column("tasks", String, nullable=False)
+
+
+    def __init__ (self, tasksP):
+        self.tasks = tasksP
 
 
 #pra CRIAR o arquivo de migração do alembic(que é quando vc altera alguma coisa na definição das classes que geram as tabelas), vc roda:
