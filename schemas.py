@@ -21,7 +21,15 @@ class UserSchema(BaseModel):
 
 
 class TaskSchema(BaseModel):
+    name_list: str
     tasks: list[str]
+
+    class Configure:
+        from_attributes = True
+
+
+class SearchListSchema(BaseModel):
+    name_list: str
 
     class Configure:
         from_attributes = True

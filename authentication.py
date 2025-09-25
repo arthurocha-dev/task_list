@@ -3,6 +3,7 @@ from schemas import UserSchema
 from depedencies import operating_session
 from sqlalchemy.orm import Session
 from database import databd
+from main import bcrypt_context
 
 
 authentication_router = APIRouter(prefix="/auth", tags=["authentication"])
@@ -24,7 +25,9 @@ async def create_user(userR: UserSchema, session: Session = Depends(operating_se
         raise HTTPException(status_code= 400, detail= f'User { {userR.email} } already existent')
     
     else:
-        new_user = databd.User(userR.name, userR.email, userR.password, userR.adm)
+        password_crypted = bcrypt_context.hash(userR.password)
+
+        new_user = databd.User(userR.name, userR.email, password_crypted, userR.adm)
         session.add(new_user)
         session.commit()
 
