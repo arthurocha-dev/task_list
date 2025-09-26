@@ -20,6 +20,15 @@ class UserSchema(BaseModel):
 
 
 
+class LoginSchema(BaseModel):
+    email_login: str
+    password_login: str
+
+    class Configure:
+        from_attributes = True
+
+
+
 class TaskSchema(BaseModel):
     name_list: str
     tasks: list[str]
