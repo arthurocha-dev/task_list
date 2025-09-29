@@ -32,14 +32,16 @@ class User(EstrutureBase):
 class Tasks(EstrutureBase):
     __tablename__ = "tasks"
 
-    # user_idT = Column("user_id", ForeignKey("user.id"))
-    task_idT = Column("task_id", Integer, autoincrement=True, primary_key=True)
+    user_idT = Column("user_id", ForeignKey("users.id"))
+    task_idT = Column("task_id", Integer, primary_key=True, autoincrement=True)
     name_listT = Column("name_list", String)
     tasksT= Column("tasks", String, nullable=False)
 
 
-    def __init__ (self, name_listP, tasksP):
+    def __init__ (self, user_idP ,name_listP, tasksP):
+        self.user_idT = user_idP
         self.name_listT = name_listP
+        
 
         #transforma um objeto python em json pra por no banco
         self.tasksT = json.dumps(tasksP)

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class UserSchema(BaseModel):
     name: str 
     email: str
@@ -28,10 +29,18 @@ class LoginSchema(BaseModel):
         from_attributes = True
 
 
+class LoginAthorizeSchema(BaseModel):
+    name_login: str
+    password_login: str
+
+    class Configure:
+        from_attributes = True
+
+
 
 class TaskSchema(BaseModel):
     name_list: str
-    tasks: list[str]
+    tasks_list: list[str]
 
     class Configure:
         from_attributes = True
@@ -42,3 +51,15 @@ class SearchListSchema(BaseModel):
 
     class Configure:
         from_attributes = True
+
+
+
+
+
+class PathListSchema(BaseModel):
+    name_edited: str
+    list_edited: list[str]
+
+    class Configure:
+        from_attribute = True
+   

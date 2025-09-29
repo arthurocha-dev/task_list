@@ -28,7 +28,7 @@ def verify_token(tokenP: str = Depends(ouath2_schema), session: Session = Depend
     except JWTError:
         raise HTTPException(status_code=401, detail= 'Token invalid')
 
-    id_user = int(dicionaty_informations_user.get('sub'))
+    id_user = int(dicionaty_informations_user.get(('sub')))
     table_user = databd.User
     user = session.query(table_user).filter(table_user.idTable == id_user).first()
 
