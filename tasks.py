@@ -16,6 +16,12 @@ tasks_router = APIRouter(prefix='/tasks', tags=['tasks'], dependencies=[Depends(
 
 @tasks_router.post('/create_list_tasks')
 async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_session), userToken: databd.User = Depends(verify_token)):
+
+    '''
+    Do not insert accents
+        
+    '''
+
     tableTask = databd.Tasks
 
     task_exists = session.query(tableTask).filter(tableTask.name_listT == tasksR.name_list).first()
@@ -94,9 +100,10 @@ async def edit_list(name_listE: str, edit_listSchema: PathListSchema, user: data
 
 
         session.commit()
-
+        session.refresh(list_exist)
         return{
-            'mensager': f'Lits { {name_listE} } update with success!'
+            'mensager': f'Lits { {name_listE} } update with success!',
+            'list': list_exist.tasksT
         }
 
         
