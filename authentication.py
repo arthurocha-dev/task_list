@@ -113,7 +113,7 @@ async def login(tokenUser: OAuth2PasswordRequestForm = Depends(), session: Sessi
             }
         
         
-@authentication_router.get('get_all_users')
+@authentication_router.get('/get_all_users')
 async def getUsers(session: Session = Depends(operating_session)):
     
     table_user = databd.User
