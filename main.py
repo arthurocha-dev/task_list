@@ -3,6 +3,7 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
@@ -32,3 +33,13 @@ from tasks import tasks_router
 
 app.include_router(authentication_router)
 app.include_router(tasks_router)
+
+
+# 🔥 Permite que o front se conecte ao back
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ou ["http://localhost:5173"] se quiser deixar mais seguro
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
