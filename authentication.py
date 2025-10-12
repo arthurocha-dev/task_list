@@ -39,9 +39,15 @@ async def create_user(userR: UserSchema, session: Session = Depends(operating_se
     user = session.query(databd.User).filter(databd.User.emailTable == userR.email).first()
 
     if user:
+
+        
         raise HTTPException(status_code= 400, detail= f'User { {userR.email} } already existent')
     
     else:
+        if not userR.name or not userR.email or not userR.password :
+            raise HTTPException(status_code=400, detail= 'Campos não preenchidos')
+
+        
         password_crypted = bcrypt_context.hash(userR.password)
 
         new_user = databd.User(userR.name, userR.email, password_crypted, userR.adm)
