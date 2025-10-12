@@ -82,10 +82,11 @@ async def login(loginS: LoginSchema, session: Session = Depends(operating_sessio
         
         else:
             access_token = create_token(user.idTable)
+            print('token user:', access_token)
 
             return {
             'access_token': access_token,
-            'bearer': 'bearer' 
+            'bearer': 'bearer',
 
             }
         

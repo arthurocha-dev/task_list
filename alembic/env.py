@@ -23,8 +23,11 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from database import databd
-target_metadata = databd.EstrutureBase.metadata
+from database.databd import EstrutureBase
+from database.databd import User, Tasks
+target_metadata = EstrutureBase.metadata
+print("DEBUG Alembic -> Tabelas vistas:", target_metadata.tables.keys())
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

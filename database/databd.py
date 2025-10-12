@@ -5,7 +5,7 @@ from sqlalchemy_utils import EmailType
 
 
 
-db = create_engine("sqlite:///database/bank.db")
+db = create_engine("sqlite:///database/bank.db", echo=True)
 
 EstrutureBase = declarative_base()
 
@@ -50,6 +50,7 @@ class Tasks(EstrutureBase):
     def readList(self):
         return json.loads(self.tasksT)
 
+EstrutureBase.metadata.tables.keys()
 
     
 
