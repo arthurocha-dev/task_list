@@ -30,6 +30,9 @@ async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_s
         raise HTTPException(status_code=400, detail=f'The list task with the o name of { {tasksR.name_list} } already existent') 
     
     else:
+        if not tasksR.name_list or tasksR.tasks_list:
+            raise HTTPException(status_code=401, detail= 'Camps in default')
+
         task = tableTask(
         user_idP=  userToken.idTable,
         name_listP = tasksR.name_list,
