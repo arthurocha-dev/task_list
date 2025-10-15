@@ -33,7 +33,7 @@ def verify_token(tokenP: str = Depends(ouath2_schema), session: Session = Depend
     user = session.query(table_user).filter(table_user.idTable == id_user).first()
 
     if not user:
-        raise HTTPException(status_code=401,detail= "User no already or access daniet" )
+        raise HTTPException(status_code=404,detail= "User no existent or access daniet" )
     
     else:
         return user

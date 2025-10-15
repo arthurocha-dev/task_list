@@ -41,7 +41,7 @@ async def create_user(userR: UserSchema, session: Session = Depends(operating_se
     if user:
 
         
-        raise HTTPException(status_code= 400, detail= f'User { {userR.email} } already existent')
+        raise HTTPException(status_code= 409, detail= f'User { {userR.email} } already existent')
     
     else:
         if not userR.name or not userR.email or not userR.password :
@@ -72,13 +72,13 @@ async def login(loginS: LoginSchema, session: Session = Depends(operating_sessio
     user = session.query(user_table).filter(user_table.emailTable == loginS.email_login).first()
 
     if not user:
-        raise HTTPException(status_code=400, detail= f'The user { {loginS.email_login} } no already existent')
+        raise HTTPException(status_code=404, detail= f'The user { {loginS.email_login} } no already existent')
     
     
 
     else:
         if not bcrypt_context.verify(loginS.password_login, user.passwordTable):
-            raise HTTPException(status_code=401, detail=f'Password is wrong')
+            raise HTTPException(status_code=422, detail=f'Password is wrong')
         
         else:
             access_token = create_token(user.idTable)
@@ -102,13 +102,13 @@ async def login(tokenUser: OAuth2PasswordRequestForm = Depends(), session: Sessi
     user = session.query(user_table).filter(user_table.nameTable == tokenUser.username).first()
 
     if not user:
-        raise HTTPException(status_code=400, detail= f'The user { {tokenUser.username} } no already existent')
+        raise HTTPException(status_code=404, detail= f'The user { {tokenUser.username} } no already existent')
     
     
 
     else:
         if not bcrypt_context.verify(tokenUser.password, user.passwordTable):
-            raise HTTPException(status_code=401, detail=f'Password is wrong')
+            raise HTTPException(status_code=422, detail=f'Password is wrong')
         
         else:
             access_token = create_token(user.idTable)

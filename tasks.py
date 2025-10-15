@@ -1,7 +1,7 @@
 import json
 from fastapi import APIRouter, HTTPException, Depends
 from depedencies import operating_session, Depends, verify_token
-from schemas import TaskSchema, PathListSchema
+from schemas import TaskSchema, PathListSchema, SearchListSchema
 from sqlalchemy.orm import Session
 from database import databd
 
@@ -27,11 +27,11 @@ async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_s
     task_exists = session.query(tableTask).filter(tableTask.name_listT == tasksR.name_list).first()
 
     if task_exists:
-        raise HTTPException(status_code=400, detail=f'The list task with the o name of { {tasksR.name_list} } already existent') 
+        raise HTTPException(status_code=409, detail=f'The list task with the o name of { {tasksR.name_list} } already existent') 
     
     else:
-        if not tasksR.name_list or tasksR.tasks_list:
-            raise HTTPException(status_code=401, detail= 'Camps in default')
+        if not tasksR.name_list or not tasksR.tasks_list:
+            raise HTTPException(status_code=404, detail= 'Camps in default')
 
         task = tableTask(
         user_idP=  userToken.idTable,
@@ -50,15 +50,15 @@ async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_s
         }
     
 
-@tasks_router.get('/get_list')
+@tasks_router.post('/post_list')
 # requisições get não aceitam parametros do tipo pydantic(json)
-async def getList(name_listP: str, session: Session = Depends(operating_session), token_user: databd.User = Depends(verify_token)):
+async def postList(name_listP: SearchListSchema, session: Session = Depends(operating_session), token_user: databd.User = Depends(verify_token)):
 
     tableTask = databd.Tasks
     task_exists = session.query(tableTask).filter(tableTask.name_listT == name_listP, tableTask.user_idT == token_user.idTable).first()
 
     if not task_exists:
-        raise HTTPException(status_code=400, detail= f"The { {name_listP} } no existent or you no have see this is list")
+        raise HTTPException(status_code=404, detail= f"The { {name_listP} } no existent or you no have see this is list")
     
     else:
          return {
@@ -76,7 +76,7 @@ async def delete_list(name_list: str, session: Session = Depends(operating_sessi
     task = session.query(table_task).filter(table_task.name_listT == name_list, table_task.user_idT == user.idTable).first()
 
     if not task:
-        raise HTTPException(status_code= 401, detail= 'error! You no have permission or list no existent')
+        raise HTTPException(status_code= 404, detail= 'Error! List no existent')
     
     else:
         session.delete(task)
@@ -94,7 +94,7 @@ async def edit_list(name_listE: str, edit_listSchema: PathListSchema, user: data
     list_exist = session.query(tableTask).filter(tableTask.name_listT == name_listE, tableTask.user_idT == user.idTable).first()
 
     if not list_exist:
-        raise HTTPException(status_code=401, detail=f'The { {name_listE} } no existent or you no have access this is list')
+        raise HTTPException(status_code=404, detail=f'The { {name_listE} } no existent')
     
     else:
         
