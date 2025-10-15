@@ -17,10 +17,10 @@ tasks_router = APIRouter(prefix='/tasks', tags=['tasks'], dependencies=[Depends(
 @tasks_router.post('/create_list_tasks')
 async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_session), userToken: databd.User = Depends(verify_token)):
 
-    '''
-    Do not insert accents
+    # '''
+    # Do not insert accents
         
-    '''
+    # '''
 
     tableTask = databd.Tasks
 

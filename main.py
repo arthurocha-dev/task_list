@@ -23,6 +23,11 @@ SECRET_KEY_V = os.getenv('SECRET_KEY')
 # a variavel tem que ser "app"
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173"
+]
+
+
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")
 
 ouath2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login_athorize")
