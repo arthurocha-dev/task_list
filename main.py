@@ -40,10 +40,15 @@ app.include_router(authentication_router)
 app.include_router(tasks_router)
 
 
+origins = [
+    "http://localhost:5173"
+]
+
+
 # 🔥 Permite que o front se conecte ao back
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ou ["http://localhost:5173"] se quiser deixar mais seguro
+    allow_origins= origins,  # ou ["http://localhost:5173"] se quiser deixar mais seguro, SEM COLCHETESSSSSSSSSSSSSSSS POR FAVOR
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -50,18 +50,19 @@ async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_s
         }
     
 
-@tasks_router.post('/post_list')
+@tasks_router.post('/resgate_list')
 # requisições get não aceitam parametros do tipo pydantic(json)
 async def postList(name_listP: SearchListSchema, session: Session = Depends(operating_session), token_user: databd.User = Depends(verify_token)):
 
     tableTask = databd.Tasks
-    task_exists = session.query(tableTask).filter(tableTask.name_listT == name_listP, tableTask.user_idT == token_user.idTable).first()
+    task_exists = session.query(tableTask).filter(tableTask.name_listT == name_listP.name_list, tableTask.user_idT == token_user.idTable).first()
 
     if not task_exists:
-        raise HTTPException(status_code=404, detail= f"The { {name_listP} } no existent or you no have see this is list")
+        raise HTTPException(status_code=404, detail= f"The { {name_listP.name_list} } no existent or you no have see this is list")
     
     else:
          return {
+            'mensager': 'list searched with success',
             'task': name_listP,
             'list': json.loads(task_exists.tasksT)
 
