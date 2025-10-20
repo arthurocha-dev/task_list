@@ -53,7 +53,11 @@ class SearchListSchema(BaseModel):
         from_attributes = True
 
 
+class DeleteListSchema(BaseModel):
+    name_list: str
 
+    class Configure:
+        from_attribute = True 
 
 
 class PathListSchema(BaseModel):

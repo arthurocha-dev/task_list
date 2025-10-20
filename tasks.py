@@ -1,7 +1,7 @@
 import json
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from depedencies import operating_session, Depends, verify_token
-from schemas import TaskSchema, PathListSchema, SearchListSchema
+from schemas import TaskSchema, PathListSchema, SearchListSchema, DeleteListSchema
 from sqlalchemy.orm import Session
 from database import databd
 
@@ -50,31 +50,32 @@ async def create_task(tasksR: TaskSchema, session: Session = Depends(operating_s
         }
     
 
-@tasks_router.post('/resgate_list')
+@tasks_router.get('/resgate_list')
 # requisições get não aceitam parametros do tipo pydantic(json)
-async def postList(name_listP: SearchListSchema, session: Session = Depends(operating_session), token_user: databd.User = Depends(verify_token)):
+async def getList(nameList: str, session: Session = Depends(operating_session), token_user: databd.User = Depends(verify_token)):
 
     tableTask = databd.Tasks
-    task_exists = session.query(tableTask).filter(tableTask.name_listT == name_listP.name_list, tableTask.user_idT == token_user.idTable).first()
+    task_exists = session.query(tableTask).filter(tableTask.name_listT == nameList, tableTask.user_idT == token_user.idTable).first()
 
     if not task_exists:
-        raise HTTPException(status_code=404, detail= f"The { {name_listP.name_list} } no existent or you no have see this is list")
+        raise HTTPException(status_code=404, detail= f"The { {nameList} } no existent or you no have see this is list")
     
     else:
          return {
             'mensager': 'list searched with success',
-            'task': name_listP,
-            'list': json.loads(task_exists.tasksT)
+            'task': nameList,
+            'list': json.loads(task_exists.tasksT) #tranforma o json em um objeto python
+
 
          }
     
 
 @tasks_router.delete('/delete_list_of_task')
-async def delete_list(name_list: str, session: Session = Depends(operating_session), user: databd.User = Depends(verify_token)):
+async def delete_list(name_listP: str, session: Session = Depends(operating_session), user: databd.User = Depends(verify_token)):
 
     table_task = databd.Tasks
 
-    task = session.query(table_task).filter(table_task.name_listT == name_list, table_task.user_idT == user.idTable).first()
+    task = session.query(table_task).filter(table_task.name_listT == name_listP, table_task.user_idT == user.idTable).first()
 
     if not task:
         raise HTTPException(status_code= 404, detail= 'Error! List no existent')
@@ -84,7 +85,7 @@ async def delete_list(name_list: str, session: Session = Depends(operating_sessi
         session.commit()
 
         return{
-            'mensager': f'list { {name_list} } deleted with success'
+            'mensager': f'list { {name_listP} } deleted with success'
         }
 
 
@@ -98,8 +99,7 @@ async def edit_list(name_listE: str, edit_listSchema: PathListSchema, user: data
         raise HTTPException(status_code=404, detail=f'The { {name_listE} } no existent')
     
     else:
-        
-        list_exist.name_listT = json.dumps(edit_listSchema.name_edited)
+        list_exist.name_listT = edit_listSchema.name_edited
         list_exist.tasksT = json.dumps(edit_listSchema.list_edited)
 
 
@@ -107,7 +107,8 @@ async def edit_list(name_listE: str, edit_listSchema: PathListSchema, user: data
         session.refresh(list_exist)
         return{
             'mensager': f'Lits { {name_listE} } update with success!',
-            'list': list_exist.tasksT
+            'new_name:' f'{edit_listSchema.name_edited}'
+            'list': json.loads(list_exist.tasksT) 
         }
 
         
